@@ -1,0 +1,22 @@
+{
+  "name": "ftp_ftps",
+  "version": "0.1.1",
+  "description": "",
+  "cordova": {
+    "id": "cordova.plugin.ftp_ftps",
+    "platforms": []
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NicolasBuergler/cordova.plugin.ftp_ftps.git"
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "NicolasBuergler",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NicolasBuergler/cordova.plugin.ftp_ftps/issues"
+  },
+  "homepage": "https://github.com/NicolasBuergler/cordova.plugin.ftp_ftps#readme"
+}
