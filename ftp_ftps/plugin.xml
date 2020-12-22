@@ -1,2 +1,15 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="cordova.plugin.ftp_ftps" version="0.1.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android"><name>ftp_ftps</name><js-module name="ftp_ftps" src="www/ftp_ftps.js"><clobbers target="cordova.plugins.ftp_ftps" /></js-module><platform name="android"><config-file parent="/*" target="res/xml/config.xml"><feature name="ftp_ftps"><param name="android-package" value="cordova.plugin.ftp_ftps.ftp_ftps" /></feature></config-file><config-file parent="/*" target="AndroidManifest.xml"></config-file><source-file src="src/android/ftp_ftps.java" target-dir="src/cordova/plugin/ftp_ftps/ftp_ftps" /></platform></plugin>
+<plugin id="cordova.plugin.ftp_ftps" version="0.1.1" xmlns="http://apache.org/cordova/ns/plugins/1.0"
+ xmlns:android="http://schemas.android.com/apk/res/android">
+ <name>ftp_ftps</name>
+ <js-module name="ftp_ftps" src="www/ftp_ftps.js"><clobbers target="cordova.plugins.ftp_ftps" />
+ </js-module>
+ <platform name="android"><config-file parent="/*" target="res/xml/config.xml">
+ <feature name="ftp_ftps"><param name="android-package" value="cordova.plugin.ftp_ftps.ftp_ftps" />
+ </feature></config-file>
+ <config-file parent="/*" target="AndroidManifest.xml">
+ </config-file>
+ <source-file src="src/android/ftp_ftps.java" target-dir="src/cordova/plugin/ftp_ftps/ftp_ftps" />
+ <lib-file src="src/android/libs/commons-net-3.7.2.jar" />
+ </platform>
+ </plugin>
