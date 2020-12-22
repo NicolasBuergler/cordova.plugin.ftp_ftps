@@ -21,8 +21,8 @@ public class ftp_ftps extends CordovaPlugin {
             this.coolMethod(message, callbackContext);
             return true;
         }
-        else if(action.equals("connectWithFtpes")){
-            this.connectWithFtpes(args.getString(0), args.getString(1), args.getString(2), args.getString(3), callbackContext);
+        else if(action.equals("connect")){
+            this.connect(args.getString(0), args.getString(1), args.getString(2), args.getString(3), args.getString(4), callbackContext);
             return true;
         }
         else if(action.equals("upload")){
@@ -48,7 +48,7 @@ public class ftp_ftps extends CordovaPlugin {
         }
     }
 
-    private void connectWithFtpes(String url, String port, String username, String password, CallbackContext callbackContext) {
+    private void connect(String url, String port, String username, String password, String protocol, CallbackContext callbackContext) {
         throw new NotImplementedException();
     }
 

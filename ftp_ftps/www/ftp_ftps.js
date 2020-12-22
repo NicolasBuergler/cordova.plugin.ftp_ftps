@@ -4,8 +4,8 @@ exports.coolMethod = function (arg0, success, error) {
     exec(success, error, 'ftp_ftps', 'coolMethod', [arg0]);
 };
 
-exports.connectWithFtpes = function (url, port, username, password, success, error) {
-    exec(success, error, 'ftp_ftps', 'connectWithFtpes', [url, port, username, password]);
+exports.connect = function (url, port, username, password, protocol, success, error) {
+    exec(success, error, 'ftp_ftps', 'connect', [url, port, username, password, protocol]);
 };
 
 exports.upload = function (localPath, remotePath, success, error) {
