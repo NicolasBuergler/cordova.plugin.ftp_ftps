@@ -37,6 +37,10 @@ public class ftp_ftps extends CordovaPlugin {
             this.changeWorkingDirectory(args.getString(0), callbackContext);
             return true;
         }
+        else if(action.equals("disconnect")){
+            this.disconnect(callbackContext);
+            return true;
+        }
         return false;
     }
 
@@ -61,6 +65,10 @@ public class ftp_ftps extends CordovaPlugin {
     }
 
     private void changeWorkingDirectory(String remotePath, CallbackContext callbackContext) {
+        throw new NotImplementedException();
+    }
+
+    private void disconnect(CallbackContext callbackContext) {
         throw new NotImplementedException();
     }
 }

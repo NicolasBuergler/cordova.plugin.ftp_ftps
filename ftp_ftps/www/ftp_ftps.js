@@ -19,3 +19,7 @@ exports.listFiles = function (remotePath, success, error) {
 exports.changeWorkingDirectory = function (remotePath, success, error) {
     exec(success, error, 'ftp_ftps', 'changeWorkingDirectory', [remotePath]);
 };
+
+exports.disconnect = function (success, error) {
+    exec(success, error, 'ftp_ftps', 'disconnect', []);
+};
