@@ -7,17 +7,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+
+import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClientConfig;
-import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
-import org.apache.commons.net.ftp.FTPSClient;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPClientConfig;
+import org.apache.commons.net.ftp.FTPSClient;
 import org.apache.commons.net.util.TrustManagerUtils;
 
-import java.io.InputStream;
 import java.io.FileInputStream;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 /**
  * This class echoes a string called from JavaScript.
  */
@@ -28,7 +32,7 @@ public class ftp_ftps extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-/*         if (action.equals("coolMethod")) {
+        if (action.equals("coolMethod")) {
             String message = args.getString(0);
             this.coolMethod(message, callbackContext);
             return true;
@@ -53,20 +57,20 @@ public class ftp_ftps extends CordovaPlugin {
             this.disconnect(callbackContext);
             return true;
         }
-        return false; */
+        return false;
     }
 
     private void coolMethod(String message, CallbackContext callbackContext) {
-/*         if (message != null && message.length() > 0) {
+        if (message != null && message.length() > 0) {
             callbackContext.success(message);
         } else {
             callbackContext.error("Expected one non-empty string argument.");
-        } */
+        }
     }
 
     private void connect(String url, String port, String username, String password, String protocol, CallbackContext callbackContext) {
          
-/*         try{
+        try{
             if(protocol.equals("ftpes")){
                 ftps = new FTPSClient(false);
                 ftps.setTrustManager(TrustManagerUtils.getAcceptAllTrustManager());
@@ -86,7 +90,7 @@ public class ftp_ftps extends CordovaPlugin {
             final FTPClientConfig config = new FTPClientConfig();
 
             ftp.configure(config);
-            ftp.connect(url, port);
+            ftp.connect(url, Integer.parseInt(port));
             ftp.login(username, password);
             int reply = ftp.getReplyCode();
             if(reply == 230){
@@ -98,12 +102,12 @@ public class ftp_ftps extends CordovaPlugin {
         }
         catch(Exception e){
             callbackContext.error("Connecting failed. "+e.getMessage());
-        } */
+        }
 
     }
 
     private void upload(String localPath, String remotePath, CallbackContext callbackContext) {
-/*         try{
+        try{
             if(ftp != null){
                 ftps.execPBSZ(0);
                 ftps.execPROT("P");
@@ -125,15 +129,15 @@ public class ftp_ftps extends CordovaPlugin {
         }
         catch(Exception e){
             callbackContext.error("Upload failed with a error. "+e.getMessage());
-        } */
+        }
     }
 
     private void listFiles(String remotePath, CallbackContext callbackContext) {
-        /* callbackContext.error("Noch nicht umgesetzt"); */
+        callbackContext.error("Noch nicht umgesetzt");
     }
 
     private void changeWorkingDirectory(String remotePath, CallbackContext callbackContext) {
-/*         try{
+        try{
             ftp.changeWorkingDirectory(remotePath);
             int reply = ftp.getReplyCode();
             if(reply == 250){
@@ -145,16 +149,16 @@ public class ftp_ftps extends CordovaPlugin {
         }
         catch(Exception e){
             callbackContext.error("Changing Directory failed with a error. "+e.getMessage());
-        } */
+        }
     }
 
     private void disconnect(CallbackContext callbackContext) {
-/*         try{
+        try{
             ftp.disconnect();
             callbackContext.success("Disconnect success");
         }
         catch(Exception e){
             callbackContext.error("Disconnecting failed with a error. "+e.getMessage());
-        } */
+        }
     }
 }
