@@ -7,12 +7,24 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClientConfig;
+import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.ftp.FTPReply;
+import org.apache.commons.net.ftp.FTPSClient;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.util.TrustManagerUtils;
+
+import java.io.InputStream;
+import java.io.FileInputStream;
 
 /**
  * This class echoes a string called from JavaScript.
  */
 public class ftp_ftps extends CordovaPlugin {
+
+    FTPClient ftp;
+    FTPSClient ftps;
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -53,22 +65,96 @@ public class ftp_ftps extends CordovaPlugin {
     }
 
     private void connect(String url, String port, String username, String password, String protocol, CallbackContext callbackContext) {
-        throw new NotImplementedException();
+         
+        try{
+            if(protocol.equals("ftpes")){
+                ftps = new FTPSClient(false);
+                ftps.setTrustManager(TrustManagerUtils.getAcceptAllTrustManager());
+            }
+            else if(protocol.equals("ftps")){
+                ftps = new FTPSClient(true);
+                ftps.setTrustManager(TrustManagerUtils.getAcceptAllTrustManager());
+            }
+            else if(protocol.equals("ftp")){
+                ftp = new FTPClient();
+            }      
+    
+            ftp = ftps;
+            ftp.addProtocolCommandListener(
+                    new PrintCommandListener(
+                            new PrintWriter(new OutputStreamWriter(System.out, "UTF-8")), true));
+            final FTPClientConfig config = new FTPClientConfig();
+
+            ftp.configure(config);
+            ftp.connect(url, port);
+            ftp.login(username, password);
+            int reply = ftp.getReplyCode();
+            if(reply == 230){
+                callbackContext.success("Logged in successfully");
+            }
+            else{
+                callbackContext.error("Logged in failed with Code: "+reply);
+            }
+        }
+        catch(Exception e){
+            callbackContext.error("Connecting failed. "+e.getMessage());
+        }
+
     }
 
     private void upload(String localPath, String remotePath, CallbackContext callbackContext) {
-        throw new NotImplementedException();
+        try{
+            if(ftp != null){
+                ftps.execPBSZ(0);
+                ftps.execPROT("P");
+            }
+            ftp.setFileType(FTP.BINARY_FILE_TYPE);
+            ftp.enterLocalPassiveMode();
+    
+            InputStream inputStream = new FileInputStream(localPath);
+            ftp.storeFile(remotePath, inputStream);
+    
+            int reply = ftp.getReplyCode();
+            if(reply == 226 || FTPReply.isPositiveCompletion(reply)){
+                callbackContext.success("Upload was successfully");
+            }
+            else{
+                callbackContext.error("Upload failed with Code: "+reply);
+            }
+            inputStream.close();
+        }
+        catch(Exception e){
+            callbackContext.error("Upload failed with a error. "+e.getMessage());
+        }
     }
 
     private void listFiles(String remotePath, CallbackContext callbackContext) {
-        throw new NotImplementedException();
+        callbackContext.error("Noch nicht umgesetzt");
     }
 
     private void changeWorkingDirectory(String remotePath, CallbackContext callbackContext) {
-        throw new NotImplementedException();
+        try{
+            ftp.changeWorkingDirectory(remotePath);
+            int reply = ftp.getReplyCode();
+            if(reply == 250){
+                callbackContext.success("Directory was successfully changed");
+            }
+            else{
+                callbackContext.error("Changing Directory failed with Code: "+reply);
+            }
+        }
+        catch(Exception e){
+            callbackContext.error("Changing Directory failed with a error. "+e.getMessage());
+        }
     }
 
     private void disconnect(CallbackContext callbackContext) {
-        throw new NotImplementedException();
+        try{
+            ftp.disconnect();
+            callbackContext.success("Disconnect success");
+        }
+        catch(Exception e){
+            callbackContext.error("Disconnecting failed with a error. "+e.getMessage());
+        }
     }
 }
