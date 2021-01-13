@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+//import cordova.ftp;
 
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTP;
@@ -74,47 +75,55 @@ public class ftp_ftps extends CordovaPlugin {
             if(protocol.equals("ftpes")){
                 ftps = new FTPSClient(false);
                 ftps.setTrustManager(TrustManagerUtils.getAcceptAllTrustManager());
+                ftp = ftps;
             }
             else if(protocol.equals("ftps")){
                 ftps = new FTPSClient(true);
                 ftps.setTrustManager(TrustManagerUtils.getAcceptAllTrustManager());
+                ftp = ftps;
             }
             else if(protocol.equals("ftp")){
                 ftp = new FTPClient();
+                
             }      
     
-            ftp = ftps;
             ftp.addProtocolCommandListener(
                     new PrintCommandListener(
                             new PrintWriter(new OutputStreamWriter(System.out, "UTF-8")), true));
             final FTPClientConfig config = new FTPClientConfig();
 
             ftp.configure(config);
+            ftp.setConnectTimeout(5000);
             ftp.connect(url, Integer.parseInt(port));
-            ftp.login(username, password);
             int reply = ftp.getReplyCode();
+            if(!FTPReply.isPositiveCompletion(reply)){
+                callbackContext.error("Connecting failed with Code: " + reply);
+            }
+
+            ftp.login(username, password);
+            reply = ftp.getReplyCode();
             if(reply == 230){
-                callbackContext.success("Logged in successfully");
+                callbackContext.success("Login and connecting was successfully");
             }
             else{
-                callbackContext.error("Logged in failed with Code: "+reply);
+                callbackContext.error("Login failed with Code: " + reply);
             }
         }
         catch(Exception e){
             callbackContext.error("Connecting failed. "+e.getMessage());
         }
-
     }
 
     private void upload(String localPath, String remotePath, CallbackContext callbackContext) {
         try{
-            if(ftp != null){
+            if(ftps != null){
                 ftps.execPBSZ(0);
                 ftps.execPROT("P");
             }
+    
             ftp.setFileType(FTP.BINARY_FILE_TYPE);
             ftp.enterLocalPassiveMode();
-    
+
             InputStream inputStream = new FileInputStream(localPath);
             ftp.storeFile(remotePath, inputStream);
     
@@ -155,6 +164,8 @@ public class ftp_ftps extends CordovaPlugin {
     private void disconnect(CallbackContext callbackContext) {
         try{
             ftp.disconnect();
+            ftp = null;
+            ftps = null;
             callbackContext.success("Disconnect success");
         }
         catch(Exception e){
