@@ -30,6 +30,7 @@ public class ftp_ftps extends CordovaPlugin {
 
     FTPClient ftp;
     FTPSClient ftps;
+    int tries = 0;
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -128,7 +129,11 @@ public class ftp_ftps extends CordovaPlugin {
             ftp.storeFile(remotePath, inputStream);
     
             int reply = ftp.getReplyCode();
-            if(reply == 226 || FTPReply.isPositiveCompletion(reply)){
+            if(reply == 426 && tries < 3){
+                tries++;
+                upload(localPath, remotePath, callbackContext);
+            }
+            else if(reply == 226 || FTPReply.isPositiveCompletion(reply)){
                 callbackContext.success("Upload was successfully");
             }
             else{
